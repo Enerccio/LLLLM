@@ -4,6 +4,7 @@ import io.github.enerccio.llllm.Configuration;
 import io.github.enerccio.llllm.model.domain.ExtendedContentEntity;
 import io.github.enerccio.llllm.model.domain.User;
 import io.github.enerccio.llllm.model.service.ExtendedContentService;
+import io.github.enerccio.llllm.model.service.UserService;
 import io.github.enerccio.llllm.model.tx.CommonTx;
 import io.github.enerccio.llllm.model.tx.CommonTxReadOnly;
 import jakarta.persistence.EntityManager;
@@ -18,6 +19,9 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
 
     @Autowired
     protected User currentUser;
+
+    @Autowired
+    protected UserService userService;
 
     @Autowired
     protected Configuration configuration;
@@ -37,11 +41,14 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
 
     @Override
     @CommonTx
-    public T save(T entity) {
+    public T save(T entity) throws Exception {
         if (entity.getOwner() == null) {
             try {
+                if (userService == null && this instanceof UserService)
+                    userService = (UserService) this;
+
                 if (currentUser.getId() != null) {
-                    entity.setOwner(currentUser);
+                    entity.setOwner(userService.findById(currentUser.getId()));
                 }
             } catch (ScopeNotActiveException e) {
                 // ignore, this only happens during the boot when new root user is created
@@ -54,9 +61,12 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
 
         if (entity.getId() == null) {
             entityManager.persist(entity);
+            entityManager.flush();
             return entity;
         } else {
-            return entityManager.merge(entity);
+            entity = entityManager.merge(entity);
+            entityManager.flush();
+            return entity;
         }
     }
 
@@ -96,7 +106,7 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
     @Override
     @CommonTxReadOnly
     public List<Long> findAll(boolean forUser) throws Exception {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT e.id FROM " + getEntityType() + " e WHERE e.userId = ?1 AND e.deleted = false", Long.class)
+        TypedQuery<Long> query = entityManager.createQuery("SELECT e.id FROM " + getEntityType() + " e WHERE e.owner.id = ?1 AND e.deleted = false", Long.class)
                 .setParameter(1, currentUser.getId());
 
         return query.getResultList();

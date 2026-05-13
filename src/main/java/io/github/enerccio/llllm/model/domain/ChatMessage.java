@@ -1,5 +1,6 @@
 package io.github.enerccio.llllm.model.domain;
 
+import io.github.enerccio.llllm.model.domain.collections.MoveRequest;
 import io.github.enerccio.llllm.model.domain.collections.Role;
 import jakarta.persistence.*;
 
@@ -36,6 +37,8 @@ public class ChatMessage extends ExtendedContentEntity {
 
     @Lob
     private String interestingWords;
+
+    private MoveRequest moveRequest;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Resource recording;
@@ -138,5 +141,13 @@ public class ChatMessage extends ExtendedContentEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public MoveRequest getMoveRequest() {
+        return moveRequest;
+    }
+
+    public void setMoveRequest(MoveRequest moveRequest) {
+        this.moveRequest = moveRequest;
     }
 }

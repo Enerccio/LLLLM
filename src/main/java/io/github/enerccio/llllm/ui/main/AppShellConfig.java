@@ -5,6 +5,7 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 @JsModule("@vaadin/vaadin-lumo-styles/presets/compact.js")
 @JsModule("./js/canvas.js")
 @CssImport(value = "./styles/shared-styles.css", include = "lumo-badge")
+@PreserveOnRefresh
 @Configurable(preConstruction = true)
 public class AppShellConfig implements AppShellConfigurator {
 

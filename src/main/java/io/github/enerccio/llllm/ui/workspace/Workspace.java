@@ -1,14 +1,14 @@
 package io.github.enerccio.llllm.ui.workspace;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.github.enerccio.llllm.loc.L;
 import io.github.enerccio.llllm.loc.Localization;
-import io.github.enerccio.llllm.model.service.LocationService;
+import io.github.enerccio.llllm.ui.components.ai.AIComponent;
 import io.github.enerccio.llllm.ui.components.characters.CharactersComponent;
 import io.github.enerccio.llllm.ui.components.chat.ChatComponent;
 import io.github.enerccio.llllm.ui.components.location.LocationComponent;
@@ -16,7 +16,6 @@ import io.github.enerccio.llllm.ui.components.lorebook.LorebookComponent;
 import io.github.enerccio.llllm.ui.components.persona.PersonaComponent;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
 import io.github.enerccio.llllm.ui.widgets.HTabSheet;
-import io.github.enerccio.llllm.ui.components.ai.AIComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -24,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configurable
-public class Workspace extends Div {
+public class Workspace {
 
     @Autowired
     private Localization loc;
@@ -40,10 +39,13 @@ public class Workspace extends Div {
 
     private final Map<Tab, WorkspaceComponent> tabToComponent = new HashMap<>();
 
-    public void create() throws Exception {
+    public Component create() throws Exception {
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+
         tabs = new HTabSheet();
         tabs.setSizeFull();
-        add(tabs);
+        vl.add(tabs);
 
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.CHAT.create(), new Span(loc.getValue(L.WORKSPACE_TABS_CHAT))), chat.create()), chat);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.USERS.create(), new Span(loc.getValue(L.WORKSPACE_TABS_CHARACTERS))), characters.create()), characters);
@@ -70,7 +72,12 @@ public class Workspace extends Div {
                 UIUtils.internalServerError(loc, ex);
             }
         });
+
+        return vl;
     }
 
 
+    public AIComponent getAIComponent() {
+        return ai;
+    }
 }

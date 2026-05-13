@@ -40,6 +40,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-core</artifactId>
+            <version>${vaadin.version}</version>
 
             <exclusions>
                 <exclusion>
@@ -177,6 +178,33 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- TIKA - Text extraction from various file types -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-async-cli</artifactId>
+            <version>3.2.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-slf4j2-impl</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers-standard-package</artifactId>
+            <version>3.2.3</version>
+
+            <!-- xml-apis contains packages which are include in standard JDK -->
+            <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
                     <artifactId>xml-apis</artifactId>

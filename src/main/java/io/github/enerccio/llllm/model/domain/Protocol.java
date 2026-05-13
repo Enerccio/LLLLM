@@ -8,20 +8,24 @@ import jakarta.persistence.*;
         @Index(name = "protocol_is_deleted_idx", columnList = "is_deleted"),
         @Index(name = "protocol_user_id_ix", columnList = "userId")
 })
-public class Protocol extends ExtendedContentEntity {
+public abstract class Protocol extends ExtendedContentEntity {
 
     @Lob
-    private String additionalParameters;
+    private String name;
 
     private int maxTokens;
     private int replyTokens;
 
-    public String getAdditionalParameters() {
-        return additionalParameters;
+    public String getTypeName() {
+        return "undefined";
     }
 
-    public void setAdditionalParameters(String additionalParameters) {
-        this.additionalParameters = additionalParameters;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getMaxTokens() {
@@ -39,4 +43,5 @@ public class Protocol extends ExtendedContentEntity {
     public void setReplyTokens(int replyTokens) {
         this.replyTokens = replyTokens;
     }
+
 }

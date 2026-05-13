@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ExtendedContentService<T extends ExtendedContentEntity> {
 
-    T save(T entity);
+    T save(T entity) throws Exception;
     void delete(T entity);
     T findById(Long id);
     T findByUuid(String uuid);

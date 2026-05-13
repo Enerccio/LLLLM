@@ -16,7 +16,7 @@ public class ExtendedContentEntity {
     private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId", nullable = true)
     private User owner;
 
     @Lob

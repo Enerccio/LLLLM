@@ -1,5 +1,6 @@
 package io.github.enerccio.llllm.ui.main;
 
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.router.Route;
 import io.github.enerccio.llllm.model.domain.User;
 import io.github.enerccio.llllm.session.SessionPoint;
@@ -38,6 +39,11 @@ public class Main extends LoginCheckRoute {
     }
 
     @Override
+    protected void onDetach(DetachEvent detachEvent) {
+
+    }
+
+    @Override
     protected void proceedWithLogin(String username) {
         try {
             User u = userService.findByName(username);
@@ -47,8 +53,7 @@ public class Main extends LoginCheckRoute {
             user.setFullName(u.getFullName());
 
             Workspace workspace = sessionPoint.getWorkspace();
-            add(workspace);
-            workspace.create();
+            add(workspace.create());
         } catch (Exception e) {
             UIUtils.internalServerError(loc, e);
         }

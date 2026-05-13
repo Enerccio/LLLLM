@@ -22,6 +22,9 @@ public class OpenAICompatible extends ExtendedContentEntity {
     @Lob
     private String apiKey;
 
+    @Lob
+    private String additionalParameters;
+
     public String getUri() {
         return uri;
     }
@@ -44,5 +47,13 @@ public class OpenAICompatible extends ExtendedContentEntity {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public String getAdditionalParameters() {
+        return additionalParameters;
+    }
+
+    public void setAdditionalParameters(String additionalParameters) {
+        this.additionalParameters = additionalParameters;
     }
 }

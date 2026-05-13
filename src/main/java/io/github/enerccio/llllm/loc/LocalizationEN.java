@@ -35,6 +35,20 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.WORKSPACE_TABS_PERSONA, "Persona");
         setValue(L.WORKSPACE_TABS_LOCATIONS, "Locations");
         setValue(L.WORKSPACE_TABS_AI, "AI Providers");
+        setValue(L.PROTOCOL_COLUMN_NAME, "Name");
+        setValue(L.PROTOCOL_COLUMN_TYPE, "Type");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_NAME, "Name");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_URI, "URI");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_API_KEY, "API Key");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL, "Model");
+        setValue(L.BUTTON_SAVE, "Save");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL_HEADER, "Open AI Compatible AI Provider");
+        setValue(L.LABEL_OK, "OK");
+        setValue(L.LABEL_CANCEL, "Cancel");
+        setValue(L.AITABLE_SELECT_AI_PROVIDER, "Select AI Provider");
+        setValue(L.AITABLE_SELECT_AI_PROVIDER_LABEL, "AI Provider");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_ADDITIONAL_PARAMS, "Additional parameters (JSON):");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_ADDITIONAL_PARAMS_UNPARSEABLE, "Unable to parse additional parameters as valid JSON");
     }
 
     @Override
