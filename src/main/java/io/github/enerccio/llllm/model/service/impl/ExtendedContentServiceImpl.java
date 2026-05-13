@@ -7,7 +7,9 @@ import io.github.enerccio.llllm.model.service.ExtendedContentService;
 import io.github.enerccio.llllm.model.tx.CommonTx;
 import io.github.enerccio.llllm.model.tx.CommonTxReadOnly;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.ScopeNotActiveException;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,11 +31,20 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
     }
 
     @Override
+    public String getType() {
+        return getEntityType();
+    }
+
+    @Override
     @CommonTx
     public T save(T entity) {
         if (entity.getUserId() == null) {
-            if (currentUser != null) {
-                entity.setUserId(currentUser.getId());
+            try {
+                if (currentUser.getId() != null) {
+                    entity.setUserId(currentUser.getId());
+                }
+            } catch (ScopeNotActiveException e) {
+                // ignore, this only happens during the boot when new root user is created
             }
         }
 
@@ -73,6 +84,22 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
             return null;
         }
         return results.getFirst();
+    }
+
+    @Override
+    @CommonTxReadOnly
+    public List<Long> findAll() throws Exception {
+        return findAll(true);
+    }
+
+    @SuppressWarnings("SqlSourceToSinkFlow")
+    @Override
+    @CommonTxReadOnly
+    public List<Long> findAll(boolean forUser) throws Exception {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT e.id FROM " + getEntityType() + " e WHERE e.userId = ?1 AND e.deleted = false", Long.class)
+                .setParameter(1, currentUser.getId());
+
+        return query.getResultList();
     }
 
     public EntityManager getEntityManager() {

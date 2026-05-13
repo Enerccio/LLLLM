@@ -1,6 +1,8 @@
 package io.github.enerccio.llllm.loc;
 
 
+import io.github.enerccio.llllm.model.domain.collections.AIType;
+
 import java.text.DateFormat;
 import java.util.Comparator;
 import java.util.Locale;
@@ -17,4 +19,5 @@ public interface Localization {
     Comparator<String> createNaturalLanguageComparator();
     Comparator<String> createLocaleComparator();
 
+    L getAIType(AIType aiType);
 }

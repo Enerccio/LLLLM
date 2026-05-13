@@ -1,6 +1,7 @@
 package io.github.enerccio.llllm.loc;
 
 
+import io.github.enerccio.llllm.model.domain.collections.AIType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +18,19 @@ public abstract class LocalizationBase implements Localization {
     private final static Logger log = LoggerFactory.getLogger(LocalizationBase.class);
     private final Map<L, String> messages = new HashMap<>();
 
+    private Map<AIType, L> aiTypes = new HashMap<>();
+
     protected abstract void loadMessages();
 
     public LocalizationBase() {
         loadMessages();
+        loadMaps();
 
         checkLocalization();
+    }
+
+    private void loadMaps() {
+        aiTypes.put(AIType.OPEN_AI_COMPATIBLE, L.AI_TYPE_OPEN_AI_COMPATIBLE);
     }
 
     protected void checkLocalization() {
@@ -114,4 +122,8 @@ public abstract class LocalizationBase implements Localization {
         return collator::compare;
     }
 
+    @Override
+    public L getAIType(AIType aiType) {
+        return aiTypes.get(aiType);
+    }
 }

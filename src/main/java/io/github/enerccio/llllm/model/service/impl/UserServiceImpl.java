@@ -186,6 +186,7 @@ public class UserServiceImpl extends ExtendedContentServiceImpl<User> implements
             user = new User();
             user.setLogin(singleUserName);
             user.setFullName(singleUserName);
+            user.setAdmin(true);
             save(user);
         }
     }

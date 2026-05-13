@@ -1,10 +1,12 @@
 package io.github.enerccio.llllm.model.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "user_is_deleted_idx", columnList = "is_deleted"),
+        @Index(name = "user_login_idx", columnList = "login"),
+})
 public class User extends ExtendedContentEntity {
 
     @Column(unique = true, length = 64)
@@ -18,6 +20,8 @@ public class User extends ExtendedContentEntity {
 
     @Lob
     private String savedLogins;
+
+    private boolean isAdmin;
 
     public String getLogin() {
         return login;
@@ -49,5 +53,13 @@ public class User extends ExtendedContentEntity {
 
     public void setSavedLogins(String savedLogins) {
         this.savedLogins = savedLogins;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

@@ -2,12 +2,13 @@ package io.github.enerccio.llllm.model.domain;
 
 import io.github.enerccio.llllm.model.domain.ai.OpenAICompatible;
 import io.github.enerccio.llllm.model.domain.collections.AIType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "ai_is_deleted_idx", columnList = "is_deleted"),
+        @Index(name = "ai_type_idx", columnList = "ai_type"),
+})
 public class AI extends ExtendedContentEntity {
 
     private AIType aiType;
@@ -15,6 +16,9 @@ public class AI extends ExtendedContentEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "openai_compatible_id", nullable = true)
     private OpenAICompatible openAICompatible;
+
+    @Lob
+    private String name;
 
     public OpenAICompatible getOpenAICompatible() {
         return openAICompatible;
@@ -30,5 +34,13 @@ public class AI extends ExtendedContentEntity {
 
     public void setAiType(AIType aiType) {
         this.aiType = aiType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

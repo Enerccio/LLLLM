@@ -12,6 +12,9 @@ public class ExtendedContentEntity {
     @Column(unique = true, nullable = false, length = 36)
     private String uuid;
 
+    @Column(nullable = false, name = "is_deleted")
+    private boolean deleted = false;
+
     private Long userId;
 
     public Long getId() {
@@ -28,6 +31,14 @@ public class ExtendedContentEntity {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Long getUserId() {

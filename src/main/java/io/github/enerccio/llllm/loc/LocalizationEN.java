@@ -26,6 +26,14 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.MSG_VALIDATION_FAILED_CANNONT_SAVE_EXT, "Cannot save form. Invalid fields: ");
         setValue(L.BUTTON_LOGIN, "Login");
         setValue(L.MSG_AUTHENTICATION_FAILED_INFO, "Invalid credentials.");
+        setValue(L.AI_TYPE_OPEN_AI_COMPATIBLE, "OpenAI compatible");
+        setValue(L.AITABLE_COLUMN_NAME, "Name");
+        setValue(L.AITABLE_COLUMN_TYPE, "Type");
+        setValue(L.WORKSPACE_TABS_CHAT, "Chats");
+        setValue(L.WORKSPACE_TABS_CHARACTERS, "Characters");
+        setValue(L.WORKSPACE_TABS_LOREBOOK, "Lorebook");
+        setValue(L.WORKSPACE_TABS_PERSONA, "Persona");
+        setValue(L.WORKSPACE_TABS_AI, "AI Providers");
     }
 
     @Override
