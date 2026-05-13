@@ -7,9 +7,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(indexes = {
-        @Index(name = "chatcompletion_is_deleted_idx", columnList = "is_deleted"),
-})
 public class ChatCompletion extends Protocol {
 
 

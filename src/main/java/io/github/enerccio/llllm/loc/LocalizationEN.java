@@ -33,6 +33,7 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.WORKSPACE_TABS_CHARACTERS, "Characters");
         setValue(L.WORKSPACE_TABS_LOREBOOK, "Lorebook");
         setValue(L.WORKSPACE_TABS_PERSONA, "Persona");
+        setValue(L.WORKSPACE_TABS_LOCATIONS, "Locations");
         setValue(L.WORKSPACE_TABS_AI, "AI Providers");
     }
 

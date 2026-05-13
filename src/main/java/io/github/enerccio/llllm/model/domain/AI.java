@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 @Table(indexes = {
         @Index(name = "ai_is_deleted_idx", columnList = "is_deleted"),
         @Index(name = "ai_type_idx", columnList = "ai_type"),
+        @Index(name = "ai_user_id_ix", columnList = "userId")
 })
 public class AI extends ExtendedContentEntity {
 

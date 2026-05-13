@@ -9,6 +9,42 @@
         <property name="singleUserName" value="${single.mode.user:root}"/>
     </bean>
 
+    <bean class="io.github.enerccio.llllm.model.service.impl.ResourceServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.ChatServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.ChatMessageServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.LocationServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.CharacterServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.CharacterSpriteServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.PersonaServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.LorebookServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
+    <bean class="io.github.enerccio.llllm.model.service.impl.LoreEntryServiceImpl">
+        <property name="entityManager" ref="em"/>
+    </bean>
+
     <bean class="io.github.enerccio.llllm.model.service.impl.AIServiceImpl">
         <property name="entityManager" ref="em"/>
     </bean>

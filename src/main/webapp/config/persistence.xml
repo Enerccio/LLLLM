@@ -11,6 +11,19 @@
         <!-- Entity Classes -->
         <class>io.github.enerccio.llllm.model.domain.User</class>
 
+        <class>io.github.enerccio.llllm.model.domain.Resource</class>
+
+        <class>io.github.enerccio.llllm.model.domain.Language</class>
+        <class>io.github.enerccio.llllm.model.domain.languages.Japanese</class>
+
+        <class>io.github.enerccio.llllm.model.domain.Chat</class>
+        <class>io.github.enerccio.llllm.model.domain.ChatMessage</class>
+        <class>io.github.enerccio.llllm.model.domain.CharacterInfo</class>
+        <class>io.github.enerccio.llllm.model.domain.CharacterSprite</class>
+        <class>io.github.enerccio.llllm.model.domain.Persona</class>
+        <class>io.github.enerccio.llllm.model.domain.Lorebook</class>
+        <class>io.github.enerccio.llllm.model.domain.LoreEntry</class>
+        <class>io.github.enerccio.llllm.model.domain.Location</class>
         <class>io.github.enerccio.llllm.model.domain.AI</class>
         <class>io.github.enerccio.llllm.model.domain.ai.OpenAICompatible</class>
         <class>io.github.enerccio.llllm.model.domain.protocol.ChatCompletion</class>

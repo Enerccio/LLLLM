@@ -2,6 +2,7 @@ package io.github.enerccio.llllm.model.domain;
 
 import jakarta.persistence.*;
 
+// User is also settings for the app
 @Entity
 @Table(indexes = {
         @Index(name = "user_is_deleted_idx", columnList = "is_deleted"),
@@ -22,6 +23,14 @@ public class User extends ExtendedContentEntity {
     private String savedLogins;
 
     private boolean isAdmin;
+
+    // settings for the app
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AI summaryAI;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Protocol summaryProtocol;
 
     public String getLogin() {
         return login;
@@ -61,5 +70,21 @@ public class User extends ExtendedContentEntity {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public AI getSummaryAI() {
+        return summaryAI;
+    }
+
+    public void setSummaryAI(AI summaryAI) {
+        this.summaryAI = summaryAI;
+    }
+
+    public Protocol getSummaryProtocol() {
+        return summaryProtocol;
+    }
+
+    public void setSummaryProtocol(Protocol summaryProtocol) {
+        this.summaryProtocol = summaryProtocol;
     }
 }

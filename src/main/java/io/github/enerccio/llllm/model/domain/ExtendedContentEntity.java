@@ -15,7 +15,12 @@ public class ExtendedContentEntity {
     @Column(nullable = false, name = "is_deleted")
     private boolean deleted = false;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private User owner;
+
+    @Lob
+    private String extendedContent;
 
     public Long getId() {
         return id;
@@ -41,11 +46,19 @@ public class ExtendedContentEntity {
         this.deleted = deleted;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public String getExtendedContent() {
+        return extendedContent;
+    }
+
+    public void setExtendedContent(String extendedContent) {
+        this.extendedContent = extendedContent;
     }
 }

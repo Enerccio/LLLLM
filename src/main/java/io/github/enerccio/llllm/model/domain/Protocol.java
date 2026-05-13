@@ -1,9 +1,13 @@
 package io.github.enerccio.llllm.model.domain;
 
-import jakarta.persistence.Lob;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(indexes = {
+        @Index(name = "protocol_is_deleted_idx", columnList = "is_deleted"),
+        @Index(name = "protocol_user_id_ix", columnList = "userId")
+})
 public class Protocol extends ExtendedContentEntity {
 
     @Lob

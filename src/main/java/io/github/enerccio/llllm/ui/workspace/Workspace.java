@@ -8,8 +8,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.github.enerccio.llllm.loc.L;
 import io.github.enerccio.llllm.loc.Localization;
+import io.github.enerccio.llllm.model.service.LocationService;
 import io.github.enerccio.llllm.ui.components.characters.CharactersComponent;
 import io.github.enerccio.llllm.ui.components.chat.ChatComponent;
+import io.github.enerccio.llllm.ui.components.location.LocationComponent;
 import io.github.enerccio.llllm.ui.components.lorebook.LorebookComponent;
 import io.github.enerccio.llllm.ui.components.persona.PersonaComponent;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
@@ -33,6 +35,7 @@ public class Workspace extends Div {
     private final CharactersComponent characters = new CharactersComponent();
     private final PersonaComponent persona = new PersonaComponent();
     private final LorebookComponent lorebook = new LorebookComponent();
+    private final LocationComponent location = new LocationComponent();
     private final AIComponent ai = new AIComponent();
 
     private final Map<Tab, WorkspaceComponent> tabToComponent = new HashMap<>();
@@ -45,6 +48,7 @@ public class Workspace extends Div {
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.CHAT.create(), new Span(loc.getValue(L.WORKSPACE_TABS_CHAT))), chat.create()), chat);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.USERS.create(), new Span(loc.getValue(L.WORKSPACE_TABS_CHARACTERS))), characters.create()), characters);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.USER.create(), new Span(loc.getValue(L.WORKSPACE_TABS_PERSONA))), persona.create()), persona);
+        tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.PICTURE.create(), new Span(loc.getValue(L.WORKSPACE_TABS_LOCATIONS))), location.create()), location);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.BOOK.create(), new Span(loc.getValue(L.WORKSPACE_TABS_LOREBOOK))), lorebook.create()), lorebook);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.AUTOMATION.create(), new Span(loc.getValue(L.WORKSPACE_TABS_AI))), ai.create()), ai);
 
