@@ -6,10 +6,12 @@ import com.google.gson.JsonObject;
 import com.openai.models.models.Model;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,6 +31,7 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
 
     private TextField name;
     private TextField uri;
+    private IntegerField duration;
     private PasswordField apiKey;
     private ComboBox<Model> model;
     private TextArea additionalParams;
@@ -58,6 +61,12 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
         model = new ComboBox<>(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL));
         model.setItemLabelGenerator(Model::id);
         model.setWidth("100%");
+        duration = new IntegerField(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_DURATION));
+        duration.setWidth("100%");
+        duration.setSuffixComponent(new Span("sec."));
+        duration.setMin(0);
+        duration.setMax(300);
+        duration.setValue(20);
         Button reloadModels = new Button(VaadinIcon.REFRESH.create());
         reloadModels.addClickListener(event -> reloadModelList());
         additionalParams = new TextArea(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_ADDITIONAL_PARAMS));
@@ -73,7 +82,7 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
         HorizontalLayout models = new HorizontalLayout(model, reloadModels);
         models.setWidth("100%");
         models.setAlignItems(Alignment.BASELINE);
-        layout = new HorizontalLayout(models, UIUtils.voidComponent());
+        layout = new HorizontalLayout(models, duration);
         layout.setWidth("100%");
         main.add(layout);
         main.add(additionalParams);
@@ -166,6 +175,7 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
             name.setValue(getModel().getName() == null ? "" : getModel().getName());
             uri.setValue(openAICompatible.getUri() == null ? "" : openAICompatible.getUri());
             additionalParams.setValue(getModel().getOpenAICompatible().getAdditionalParameters() == null ? "" : getModel().getOpenAICompatible().getAdditionalParameters());
+            duration.setValue(getModel().getMaxDuration());
             inRefresh = false;
             reloadModelList();
         } catch (Exception e) {
@@ -183,7 +193,9 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
         if (StringUtils.isNotBlank(apiKey.getValue()))
             this.entity.getOpenAICompatible().setApiKey(apiKey.getValue());
         this.entity.getOpenAICompatible().setModel(model.getValue() == null ? null : model.getValue().id());
+        this.entity.setCapabilities(this.model.getValue() == null ? null : new GsonBuilder().create().toJson(model.getValue()._additionalProperties()));
         this.entity.getOpenAICompatible().setAdditionalParameters(additionalParams.getValue());
+        this.entity.setMaxDuration(duration.getValue());
 
         this.service.save(this.entity);
     }

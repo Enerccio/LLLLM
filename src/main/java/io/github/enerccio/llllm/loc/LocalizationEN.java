@@ -41,6 +41,7 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.OPEN_AI_COMPATIBLE_FORM_URI, "URI");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_API_KEY, "API Key");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL, "Model");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_DURATION, "Max chunk duration (seconds)");
         setValue(L.BUTTON_SAVE, "Save");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL_HEADER, "Open AI Compatible AI Provider");
         setValue(L.LABEL_OK, "OK");

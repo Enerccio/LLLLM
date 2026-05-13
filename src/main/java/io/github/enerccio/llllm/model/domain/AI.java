@@ -21,6 +21,11 @@ public class AI extends ExtendedContentEntity {
     @Lob
     private String name;
 
+    private int maxDuration;
+
+    @Lob
+    private String capabilities;
+
     public OpenAICompatible getOpenAICompatible() {
         return openAICompatible;
     }
@@ -43,5 +48,21 @@ public class AI extends ExtendedContentEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
+    }
+
+    public String getCapabilities() {
+        return capabilities;
+    }
+
+    public void setCapabilities(String capabilities) {
+        this.capabilities = capabilities;
     }
 }
