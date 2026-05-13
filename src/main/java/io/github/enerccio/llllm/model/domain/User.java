@@ -1,8 +1,10 @@
 package io.github.enerccio.llllm.model.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 
+@Entity
 public class User extends ExtendedContentEntity {
 
     @Column(unique = true, length = 64)

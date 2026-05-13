@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity> implements ExtendedContentService<T> {
 
@@ -31,7 +32,13 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
     @CommonTx
     public T save(T entity) {
         if (entity.getUserId() == null) {
-            entity.setUserId(currentUser.getId());
+            if (currentUser != null) {
+                entity.setUserId(currentUser.getId());
+            }
+        }
+
+        if (entity.getUuid() == null) {
+            entity.setUuid(UUID.randomUUID().toString());
         }
 
         if (entity.getId() == null) {

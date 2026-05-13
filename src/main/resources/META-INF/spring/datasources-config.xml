@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-        <property name="driverClassName" value="${db.driverClassName}"/>
-        <property name="url" value="${db.url}"/>
-        <property name="username" value="${db.username}" />
-        <property name="password" value="${db.password}" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="configuration" >
+        <property name="driverClassName" value="org.sqlite.JDBC"/>
+        <property name="url" value="#{configuration.resolveDb('llllm.sqlite')}"/>
+        <property name="username" value="" />
+        <property name="password" value="" />
         <property name="testOnBorrow" value="true"/>
         <property name="testOnReturn" value="true"/>
         <property name="testWhileIdle" value="true"/>
@@ -28,13 +28,23 @@
     </bean>
 
     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="pu"/>
+        <property name="persistenceUnitName" value="LLLLM_PU"/>
         <property name="persistenceXmlLocation" value="config/persistence.xml" />
         <property name="dataSource" ref="ds"/>
     </bean>
 
     <bean id="em" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name = "entityManagerFactory" ref="emf"/>
+    </bean>
+
+    <tx:annotation-driven/>
+
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" >
+        <property name="entityManagerFactory" ref="emf"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+        <qualifier value="common" />
     </bean>
 
 </beans>

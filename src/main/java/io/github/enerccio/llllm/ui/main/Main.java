@@ -18,6 +18,10 @@ public class Main extends LoginCheckRoute {
     @Autowired
     private SessionPoint sessionPoint;
 
+    public Main() {
+        showLogin();
+    }
+
     @Override
     protected String getAppTitle() {
         return "LLLLM";
