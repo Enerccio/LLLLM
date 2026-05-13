@@ -42,6 +42,7 @@ public class Main extends LoginCheckRoute {
         try {
             User u = userService.findByName(username);
 
+            user.setId(u.getId());
             user.setLogin(u.getLogin());
             user.setFullName(u.getFullName());
 

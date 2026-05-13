@@ -1,14 +1,12 @@
 package io.github.enerccio.llllm.model.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(indexes = {
         @Index(name = "resource_is_deleted_ix", columnList = "is_deleted"),
-        @Index(name = "resource_user_id_ix", columnList = "userId")
+        @Index(name = "resource_user_id_ix", columnList = "userId"),
+        @Index(name = "resource_hash_ix", columnList = "hash")
 })
 public class Resource extends ExtendedContentEntity {
 
@@ -18,6 +16,11 @@ public class Resource extends ExtendedContentEntity {
 
     @Lob
     private String originalName;
+
+    @Lob
+    private String hash;
+
+    private long size;
 
     public String getMimeType() {
         return mimeType;
@@ -41,5 +44,21 @@ public class Resource extends ExtendedContentEntity {
 
     public void setOriginalName(String originalName) {
         this.originalName = originalName;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

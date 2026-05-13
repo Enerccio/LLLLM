@@ -38,10 +38,10 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
     @Override
     @CommonTx
     public T save(T entity) {
-        if (entity.getUserId() == null) {
+        if (entity.getOwner() == null) {
             try {
                 if (currentUser.getId() != null) {
-                    entity.setUserId(currentUser.getId());
+                    entity.setOwner(currentUser);
                 }
             } catch (ScopeNotActiveException e) {
                 // ignore, this only happens during the boot when new root user is created

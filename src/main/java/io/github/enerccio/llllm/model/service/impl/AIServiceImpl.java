@@ -22,7 +22,6 @@ public class AIServiceImpl extends ExtendedContentServiceImpl<AI> implements AIS
     @CommonTx
     public AI create(AIType aiType) {
         AI ai = new AI();
-        ai.setUserId(currentUser.getId());
         ai.setAiType(aiType);
 
         ai = save(ai);
