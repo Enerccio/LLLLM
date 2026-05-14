@@ -1,17 +1,17 @@
 package io.github.enerccio.llllm.model.service.impl;
 
 import io.github.enerccio.llllm.model.domain.Resource;
+import io.github.enerccio.llllm.model.domain.User;
 import io.github.enerccio.llllm.model.service.ResourceService;
 import io.github.enerccio.llllm.model.tx.CommonTx;
 import io.github.enerccio.llllm.model.tx.CommonTxReadOnly;
 import io.github.enerccio.llllm.model.tx.NoTx;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.security.MessageDigest;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,11 +30,9 @@ public class ResourceServiceImpl extends ExtendedContentServiceImpl<Resource> im
         resource.setOriginalName(filename);
         resource.setSize(content.length);
 
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        digest.update(content);
-        resource.setHash(Base64.getEncoder().encodeToString(digest.digest()));
+        resource.setHash(DigestUtils.sha256Hex(content));
 
-        Resource existing = findByHash(resource.getHash());
+        Resource existing = findByHash(resource.getHash(), currentUser);
         if (existing != null) {
             byte[] existingContent = getResourceData(existing);
             if (existingContent.length == content.length && Arrays.equals(existingContent, content)) {
@@ -60,9 +58,10 @@ public class ResourceServiceImpl extends ExtendedContentServiceImpl<Resource> im
 
     @Override
     @CommonTxReadOnly
-    public Resource findByHash(String hash) throws Exception {
+    public Resource findByHash(String hash, User owner) throws Exception {
         List<Resource> resources = getEntityManager()
-                .createQuery("SELECT r FROM Resource r WHERE r.hash = :hash", Resource.class)
+                .createQuery("SELECT r FROM Resource r WHERE r.hash = :hash AND r.owner.id = :owner", Resource.class)
+                .setParameter("owner", owner.getId())
                 .setParameter("hash", hash)
                 .getResultList();
         return resources.isEmpty() ? null : resources.getFirst();

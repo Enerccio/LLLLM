@@ -4,7 +4,7 @@ import io.github.enerccio.llllm.model.domain.collections.ProtocolType;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(indexes = {
         @Index(name = "protocol_is_deleted_idx", columnList = "is_deleted"),
         @Index(name = "protocol_user_id_ix", columnList = "userId")
@@ -14,6 +14,7 @@ public abstract class Protocol extends ExtendedContentEntity {
     @Lob
     private String name;
 
+    @Enumerated(value = EnumType.ORDINAL)
     private ProtocolType protocolType;
 
     private int maxTokens;

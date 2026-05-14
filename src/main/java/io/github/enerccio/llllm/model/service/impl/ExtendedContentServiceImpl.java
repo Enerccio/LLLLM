@@ -76,6 +76,13 @@ public abstract class ExtendedContentServiceImpl<T extends ExtendedContentEntity
         entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
     }
 
+    @CommonTx
+    @Override
+    public T softDelete(T entity) throws Exception {
+        entity.setDeleted(true);
+        return save(entity);
+    }
+
     @Override
     @CommonTxReadOnly
     public T findById(Long id) {

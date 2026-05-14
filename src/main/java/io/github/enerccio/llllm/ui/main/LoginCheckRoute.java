@@ -6,7 +6,6 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
@@ -76,16 +75,19 @@ public abstract class LoginCheckRoute extends Div {
         String cookieLogin = null;
         String cookieIdentifier = null;
         String cookieSecret = null;
-        String context = VaadinRequest.getCurrent().getContextPath().substring(1);
-        for (Cookie cookie : VaadinService.getCurrentRequest().getCookies()) {
-            if ((context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_LOGIN).equals(cookie.getName())) {
-                cookieLogin = cookie.getValue();
-            }
-            if ((context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_IDENTIFIER).equals(cookie.getName())) {
-                cookieIdentifier = cookie.getValue();
-            }
-            if ((context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_SECRET).equals(cookie.getName())) {
-                cookieSecret = cookie.getValue();
+        String cookiePrefix = getCookiePrefix();
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ((cookiePrefix + PERSISTED_LOGIN_COOKIE_LOGIN).equals(cookie.getName())) {
+                    cookieLogin = cookie.getValue();
+                }
+                if ((cookiePrefix + PERSISTED_LOGIN_COOKIE_IDENTIFIER).equals(cookie.getName())) {
+                    cookieIdentifier = cookie.getValue();
+                }
+                if ((cookiePrefix + PERSISTED_LOGIN_COOKIE_SECRET).equals(cookie.getName())) {
+                    cookieSecret = cookie.getValue();
+                }
             }
         }
         try {
@@ -114,11 +116,11 @@ public abstract class LoginCheckRoute extends Div {
     protected void addRememberMeCookies(User user, PersistedLoginInfo persistedLoginInfo) {
         long ttl = configuration.getPersistentLoginInfoTTL() == null ?
                 60 * 60 * 24 * 30 : configuration.getPersistentLoginInfoTTL();
-        String context = VaadinRequest.getCurrent().getContextPath().substring(1);
-        Cookie cookieLogin = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_LOGIN, user.getLogin());
-        Cookie cookieIdentifier = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_IDENTIFIER, persistedLoginInfo.getIdentifier());
-        Cookie cookieSecret = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_SECRET, persistedLoginInfo.getPlainSecret());
-        Cookie cookieSaved = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_WAS_SAVED, "yes");
+        String cookiePrefix = getCookiePrefix();
+        Cookie cookieLogin = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_LOGIN, user.getLogin());
+        Cookie cookieIdentifier = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_IDENTIFIER, persistedLoginInfo.getIdentifier());
+        Cookie cookieSecret = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_SECRET, persistedLoginInfo.getPlainSecret());
+        Cookie cookieSaved = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_WAS_SAVED, "yes");
         for (Cookie cookie : List.of(cookieLogin, cookieIdentifier, cookieSecret, cookieSaved)) {
             cookie.setPath("/");
             cookie.setMaxAge((int) ttl);
@@ -128,15 +130,21 @@ public abstract class LoginCheckRoute extends Div {
     }
 
     protected void deleteRememberMeCookies() {
-        String context = VaadinRequest.getCurrent().getContextPath().substring(1);
-        Cookie cookieLogin = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_LOGIN, "");
-        Cookie cookieIdentifier = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_IDENTIFIER, "");
-        Cookie cookieSecret = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_SECRET, "");
+        String cookiePrefix = getCookiePrefix();
+        Cookie cookieLogin = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_LOGIN, "");
+        Cookie cookieIdentifier = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_IDENTIFIER, "");
+        Cookie cookieSecret = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_SECRET, "");
         for (Cookie cookie : List.of(cookieLogin, cookieIdentifier, cookieSecret)) {
             cookie.setPath("/");
             cookie.setMaxAge(0);
             VaadinService.getCurrentResponse().addCookie(cookie);
         }
+    }
+
+    private String getCookiePrefix() {
+        String rawContext = VaadinRequest.getCurrent().getContextPath();
+        String context = (StringUtils.isBlank(rawContext) || "/".equals(rawContext)) ? "root" : rawContext.substring(1);
+        return context + "_" + this.getClass().getSimpleName();
     }
 
     private void login() {
@@ -149,8 +157,9 @@ public abstract class LoginCheckRoute extends Div {
 
             Checkbox saveLoginCheckBox = new Checkbox(loc.getValue(L.LABEL_SAVE_LOGIN));
             saveLoginCheckBox.setWidth("100%");
-            saveLoginCheckBox.setValue(Arrays.stream(VaadinService.getCurrentRequest().getCookies()).anyMatch(cookie ->
-                    cookie.getName().endsWith(this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_WAS_SAVED)));
+            if (VaadinService.getCurrentRequest().getCookies() != null)
+                saveLoginCheckBox.setValue(Arrays.stream(VaadinService.getCurrentRequest().getCookies()).anyMatch(cookie ->
+                        cookie.getName().endsWith(this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_WAS_SAVED)));
 
             loginOverlay.getCustomFormArea().add(saveLoginCheckBox);
 
@@ -170,8 +179,8 @@ public abstract class LoginCheckRoute extends Div {
                                 userService.addPersistedLoginInfo(user, persistedLoginInfo);
                                 userService.save(user);
                             } else {
-                                String context = VaadinRequest.getCurrent().getContextPath().substring(1);
-                                Cookie cookieSaved = new Cookie(context + "_" + this.getClass().getSimpleName() + PERSISTED_LOGIN_COOKIE_WAS_SAVED, "");
+                                String cookiePrefix = getCookiePrefix();
+                                Cookie cookieSaved = new Cookie(cookiePrefix + PERSISTED_LOGIN_COOKIE_WAS_SAVED, "");
                                 cookieSaved.setMaxAge(0);
                                 cookieSaved.setPath("/");
                                 VaadinService.getCurrentResponse().addCookie(cookieSaved);
@@ -223,14 +232,44 @@ public abstract class LoginCheckRoute extends Div {
     }
 
     public void logout() {
+        // 1. Clear the persistent tokens from the client browser cache
         deleteRememberMeCookies();
+
+        // 2. Clear out the saved login tracker check state if present
+        String prefix = getCookiePrefix();
+        Cookie cookieSaved = new Cookie(prefix + PERSISTED_LOGIN_COOKIE_WAS_SAVED, "");
+        cookieSaved.setMaxAge(0);
+        cookieSaved.setPath("/");
+        VaadinService.getCurrentResponse().addCookie(cookieSaved);
+
+        // 3. Fire the session breakdown pipeline
         logoutWithoutCookieClear();
     }
 
     public void logoutWithoutCookieClear() {
-        UI.getCurrent().navigate(getClass());
-        VaadinSession.getCurrent().getSession().invalidate();
-        UI.getCurrent().getSession().close();
+        UI currentUi = UI.getCurrent();
+        if (currentUi != null) {
+            // Set the browser location back to the root application path.
+            // This forces the browser to drop the state-heavy WebSocket/SSE connection
+            // and perform a clean page reload before the server session dies.
+            String rawContext = VaadinRequest.getCurrent().getContextPath();
+            String redirectPath = (rawContext == null || "/".equals(rawContext)) ? "/" : rawContext;
+
+            currentUi.getPage().setLocation(redirectPath);
+        }
+
+        // Close and invalidate cleanly using the Vaadin 24 Service wrapper.
+        // Doing this via VaadinService avoids raw thread collisions with the HTTP container.
+        VaadinSession currentSession = VaadinSession.getCurrent();
+        if (currentSession != null) {
+            currentSession.close();
+        }
+
+        // Safely kill the underlying raw container HTTP session
+        var wrappedSession = VaadinService.getCurrentRequest().getWrappedSession(false);
+        if (wrappedSession != null) {
+            wrappedSession.invalidate();
+        }
     }
 
     protected boolean canEnterApp(String userName) throws Exception {
@@ -238,6 +277,15 @@ public abstract class LoginCheckRoute extends Div {
     }
 
     public void exit() {
-        UI.getCurrent().getPage().setLocation("about:blank");
+        UI currentUi = UI.getCurrent();
+        if (currentUi != null) {
+            currentUi.getPage().setLocation("about:blank");
+        }
+
+        // Wipe active session on window close
+        VaadinSession currentSession = VaadinSession.getCurrent();
+        if (currentSession != null) {
+            currentSession.close();
+        }
     }
 }

@@ -12,6 +12,7 @@ import io.github.enerccio.llllm.model.domain.Protocol;
 import io.github.enerccio.llllm.model.domain.collections.ProtocolType;
 import io.github.enerccio.llllm.model.domain.protocol.ChatCompletion;
 import io.github.enerccio.llllm.model.service.ProtocolService;
+import io.github.enerccio.llllm.ui.dialogs.ConfirmDialog;
 import io.github.enerccio.llllm.ui.dialogs.ListSelectDialog;
 import io.github.enerccio.llllm.ui.forms.ai.protocol.ChatCompletionProtocolForm;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
@@ -57,7 +58,6 @@ public class ProtocolTable {
             dialog.open();
         });
         buttons.add(newProtocol);
-
         grid = new Grid<>();
         grid.setSizeFull();
 
@@ -77,6 +77,28 @@ public class ProtocolTable {
             });
             return edit;
         }).setFlexGrow(0).setWidth("50px");
+        grid.addComponentColumn(item -> {
+            Button delete = new Button(VaadinIcon.ERASER.create());
+            delete.addClickListener(event -> {
+                try {
+                    if (item != null) {
+                        Protocol protocol = protocolService.findById(item.getId());
+                        ConfirmDialog.show(loc.getValue(L.PROTOCOL_DELETE_CONFIRM), () -> {
+                            try {
+                                protocolService.softDelete(protocol);
+                                refresh();
+                            } catch (Exception e) {
+                                UIUtils.internalServerError(loc, e);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    UIUtils.internalServerError(loc, e);
+                }
+            });
+            return delete;
+        }).setFlexGrow(0).setWidth("50px");
+
 
         layout.add(grid);
         layout.expand(grid);

@@ -19,6 +19,7 @@
 
     <import resource="datasources-config.xml" />
     <import resource="services-config.xml" />
+    <import resource="factories-config.xml" />
 
     <bean name="localization" class="${localization}" />
 
@@ -31,7 +32,7 @@
         <aop:scoped-proxy />
     </bean>
 
-    <bean name="sessionPoint" class="io.github.enerccio.llllm.session.SessionPoint" scope="session">
+    <bean name="sessionPoint" class="io.github.enerccio.llllm.bound.SessionPoint" scope="session">
         <aop:scoped-proxy />
     </bean>
 

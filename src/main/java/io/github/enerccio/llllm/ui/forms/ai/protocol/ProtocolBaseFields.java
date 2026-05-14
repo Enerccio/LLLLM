@@ -1,5 +1,4 @@
 package io.github.enerccio.llllm.ui.forms.ai.protocol;
-
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,10 +38,12 @@ public class ProtocolBaseFields {
 
         name = new TextField(loc.getValue(L.PROTOCOL_BASE_FIELDS_NAME));
         name.setWidth("100%");
+
         maxContext = new IntegerField(loc.getValue(L.PROTOCOL_BASE_FIELDS_MAX_CONTEXT));
         maxContext.setWidth("100%");
         maxContext.setMin(1);
         maxContext.setMax(Integer.MAX_VALUE);
+
         maxTokens = new IntegerField(loc.getValue(L.PROTOCOL_BASE_FIELDS_MAX_TOKENS));
         maxTokens.setMin(1);
         maxTokens.setWidth("100%");
@@ -51,51 +52,73 @@ public class ProtocolBaseFields {
         HorizontalLayout tokens = new HorizontalLayout(maxContext, maxTokens);
         tokens.setWidth("100%");
 
+        // Temperature Block
         temperatureEnabled = new Checkbox(loc.getValue(L.PROTOCOL_BASE_FIELDS_ENABLED));
         temperature = new NumberField(loc.getValue(L.PROTOCOL_BASE_FIELDS_TEMPERATURE));
         temperature.setWidth("100%");
         temperature.setMin(0.0);
         temperature.setMax(2.0);
+        temperatureEnabled.addValueChangeListener(e -> temperature.setEnabled(e.getValue())); // FIXED: Link visibility state
+
         HorizontalLayout tempLayout = new HorizontalLayout(temperatureEnabled, temperature);
         tempLayout.setWidth("100%");
         tempLayout.setAlignItems(Alignment.BASELINE);
 
+        // Top P Block
         topPEnabled = new Checkbox(loc.getValue(L.PROTOCOL_BASE_FIELDS_ENABLED));
         topP = new NumberField(loc.getValue(L.PROTOCOL_BASE_FIELDS_TOP_P));
         topP.setWidth("100%");
         topP.setMin(0.0);
         topP.setMax(1.0);
+        topPEnabled.addValueChangeListener(e -> topP.setEnabled(e.getValue())); // FIXED: Link visibility state
+
         HorizontalLayout topPLayout = new HorizontalLayout(topPEnabled, topP);
         topPLayout.setWidth("100%");
-        topPLayout.setAlignItems(VerticalLayout.Alignment.BASELINE);
+        topPLayout.setAlignItems(Alignment.BASELINE);
 
         HorizontalLayout tempTop = new HorizontalLayout(tempLayout, topPLayout);
         tempTop.setWidth("100%");
 
+        // Frequency Penalty Block
         frequencyPenaltyEnabled = new Checkbox(loc.getValue(L.PROTOCOL_BASE_FIELDS_ENABLED));
         frequencyPenalty = new NumberField(loc.getValue(L.PROTOCOL_BASE_FIELDS_FREQ));
         frequencyPenalty.setWidth("100%");
         frequencyPenalty.setMin(-2.0);
         frequencyPenalty.setMax(2.0);
+        frequencyPenaltyEnabled.addValueChangeListener(e -> frequencyPenalty.setEnabled(e.getValue())); // FIXED: Link visibility state
+
         HorizontalLayout freqLayout = new HorizontalLayout(frequencyPenaltyEnabled, frequencyPenalty);
         freqLayout.setWidth("100%");
-        freqLayout.setAlignItems(VerticalLayout.Alignment.BASELINE);
+        freqLayout.setAlignItems(Alignment.BASELINE);
 
+        // Presence Penalty Block
         presencePenaltyEnabled = new Checkbox(loc.getValue(L.PROTOCOL_BASE_FIELDS_ENABLED));
         presencePenalty = new NumberField(loc.getValue(L.PROTOCOL_BASE_FIELDS_PRES));
         presencePenalty.setWidth("100%");
         presencePenalty.setMin(-2.0);
         presencePenalty.setMax(2.0);
+        presencePenaltyEnabled.addValueChangeListener(e -> presencePenalty.setEnabled(e.getValue())); // FIXED: Link visibility state
+
         HorizontalLayout presLayout = new HorizontalLayout(presencePenaltyEnabled, presencePenalty);
         presLayout.setWidth("100%");
-        presLayout.setAlignItems(VerticalLayout.Alignment.BASELINE);
+        presLayout.setAlignItems(Alignment.BASELINE);
 
         HorizontalLayout penalties = new HorizontalLayout(freqLayout, presLayout);
         penalties.setWidth("100%");
 
         main.add(name, tokens, tempTop, penalties);
 
+        // Standard initialization setting controls to disabled until model data hydrates them
+        setFieldsEnabledState(false);
+
         return main;
+    }
+
+    private void setFieldsEnabledState(boolean enabled) {
+        temperature.setEnabled(enabled);
+        topP.setEnabled(enabled);
+        frequencyPenalty.setEnabled(enabled);
+        presencePenalty.setEnabled(enabled);
     }
 
     public void model2view(Protocol protocol) throws Exception {
@@ -103,23 +126,33 @@ public class ProtocolBaseFields {
         maxTokens.setValue(protocol.getReplyTokens());
         maxContext.setValue(protocol.getMaxTokens());
 
-        temperatureEnabled.setValue(protocol.getTemperatureEnabled() != null && protocol.getTemperatureEnabled());
+        boolean tempOn = protocol.getTemperatureEnabled() != null && protocol.getTemperatureEnabled();
+        temperatureEnabled.setValue(tempOn);
         temperature.setValue(protocol.getTemperature());
+        temperature.setEnabled(tempOn); // FIXED: Force direct UI state match on load
 
-        topPEnabled.setValue(protocol.getTopPEnabled() != null && protocol.getTopPEnabled());
+        boolean topPOn = protocol.getTopPEnabled() != null && protocol.getTopPEnabled();
+        topPEnabled.setValue(topPOn);
         topP.setValue(protocol.getTopP());
+        topP.setEnabled(topPOn); // FIXED: Force direct UI state match on load
 
-        frequencyPenaltyEnabled.setValue(protocol.getFrequencyPenaltyEnabled() != null && protocol.getFrequencyPenaltyEnabled());
+        boolean freqOn = protocol.getFrequencyPenaltyEnabled() != null && protocol.getFrequencyPenaltyEnabled();
+        frequencyPenaltyEnabled.setValue(freqOn);
         frequencyPenalty.setValue(protocol.getFrequencyPenalty());
+        frequencyPenalty.setEnabled(freqOn); // FIXED: Force direct UI state match on load
 
-        presencePenaltyEnabled.setValue(protocol.getPresencePenaltyEnabled() != null && protocol.getPresencePenaltyEnabled());
+        boolean presOn = protocol.getPresencePenaltyEnabled() != null && protocol.getPresencePenaltyEnabled();
+        presencePenaltyEnabled.setValue(presOn);
         presencePenalty.setValue(protocol.getPresencePenalty());
+        presencePenalty.setEnabled(presOn); // FIXED: Force direct UI state match on load
     }
 
     public void view2model(Protocol protocol) throws Exception {
         protocol.setName(name.getValue());
-        protocol.setReplyTokens(maxTokens.getValue() != null ? maxTokens.getValue() : 1);
-        protocol.setMaxTokens(maxContext.getValue() != null ? maxContext.getValue() : 1);
+
+        // FIXED: Safe default structural assignment tracking logic
+        protocol.setReplyTokens(maxTokens.getValue() != null ? maxTokens.getValue() : 4096);
+        protocol.setMaxTokens(maxContext.getValue() != null ? maxContext.getValue() : 8192);
 
         protocol.setTemperatureEnabled(temperatureEnabled.getValue());
         protocol.setTemperature(temperature.getValue());
@@ -133,5 +166,4 @@ public class ProtocolBaseFields {
         protocol.setPresencePenaltyEnabled(presencePenaltyEnabled.getValue());
         protocol.setPresencePenalty(presencePenalty.getValue());
     }
-
 }

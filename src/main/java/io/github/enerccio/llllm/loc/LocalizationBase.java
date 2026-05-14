@@ -3,6 +3,7 @@ package io.github.enerccio.llllm.loc;
 
 import io.github.enerccio.llllm.model.domain.collections.AIType;
 import io.github.enerccio.llllm.model.domain.collections.ProtocolType;
+import io.github.enerccio.llllm.model.domain.collections.ReasoningEffort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public abstract class LocalizationBase implements Localization {
 
     private final Map<AIType, L> aiTypes = new HashMap<>();
     private final Map<ProtocolType, L> protocolTypes = new HashMap<>();
+    private final Map<ReasoningEffort, L> reasoningEfforts = new HashMap<>();
 
     protected abstract void loadMessages();
 
@@ -35,6 +37,11 @@ public abstract class LocalizationBase implements Localization {
         aiTypes.put(AIType.OPEN_AI_COMPATIBLE, L.AI_TYPE_OPEN_AI_COMPATIBLE);
 
         protocolTypes.put(ProtocolType.CHAT_COMPLETION, L.PROTOCOL_TYPE_OPEN_CHAT_COMPLETION);
+
+        reasoningEfforts.put(ReasoningEffort.NONE, L.REASONING_NONE);
+        reasoningEfforts.put(ReasoningEffort.LOW, L.REASONING_LOW);
+        reasoningEfforts.put(ReasoningEffort.MEDIUM, L.REASONING_MEDIUM);
+        reasoningEfforts.put(ReasoningEffort.HIGH, L.REASONING_HIGH);
     }
 
     protected void checkLocalization() {
@@ -134,5 +141,10 @@ public abstract class LocalizationBase implements Localization {
     @Override
     public L getProtocolType(ProtocolType type) {
         return protocolTypes.get(type);
+    }
+
+    @Override
+    public L getReasoningEffort(ReasoningEffort type) {
+        return reasoningEfforts.get(type);
     }
 }

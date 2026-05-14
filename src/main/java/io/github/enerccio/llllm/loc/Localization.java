@@ -3,6 +3,7 @@ package io.github.enerccio.llllm.loc;
 
 import io.github.enerccio.llllm.model.domain.collections.AIType;
 import io.github.enerccio.llllm.model.domain.collections.ProtocolType;
+import io.github.enerccio.llllm.model.domain.collections.ReasoningEffort;
 
 import java.text.DateFormat;
 import java.util.Comparator;
@@ -22,4 +23,5 @@ public interface Localization {
 
     L getAIType(AIType aiType);
     L getProtocolType(ProtocolType t);
+    L getReasoningEffort(ReasoningEffort t);
 }

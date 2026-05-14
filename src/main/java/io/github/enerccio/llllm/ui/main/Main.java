@@ -2,8 +2,8 @@ package io.github.enerccio.llllm.ui.main;
 
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.router.Route;
+import io.github.enerccio.llllm.bound.SessionPoint;
 import io.github.enerccio.llllm.model.domain.User;
-import io.github.enerccio.llllm.session.SessionPoint;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
 import io.github.enerccio.llllm.ui.workspace.Workspace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +52,9 @@ public class Main extends LoginCheckRoute {
             user.setLogin(u.getLogin());
             user.setFullName(u.getFullName());
 
-            Workspace workspace = sessionPoint.getWorkspace();
+            Workspace workspace = sessionPoint.getWorkspace(user.getId());
             add(workspace.create());
+            sessionPoint.registerRootContainer(user.getId(), this);
         } catch (Exception e) {
             UIUtils.internalServerError(loc, e);
         }

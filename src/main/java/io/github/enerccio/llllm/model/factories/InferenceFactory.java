@@ -3,12 +3,12 @@ package io.github.enerccio.llllm.model.factories;
 import io.github.enerccio.llllm.model.domain.AI;
 import io.github.enerccio.llllm.model.service.InferenceProvider;
 import io.github.enerccio.llllm.model.service.inference.OpenAIInferenceService;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Configurable
 public class InferenceFactory {
 
-    private final OpenAIInferenceService openAIInferenceService = new OpenAIInferenceService();
+    @Autowired
+    private OpenAIInferenceService openAIInferenceService;
 
     public InferenceProvider getInferenceProvider(AI ai) {
         return switch (ai.getAiType()) {
@@ -17,12 +17,11 @@ public class InferenceFactory {
         };
     }
 
-    private static final class InstanceHolder {
-        private static final InferenceFactory instance = new InferenceFactory();
+    public OpenAIInferenceService getOpenAIInferenceService() {
+        return openAIInferenceService;
     }
 
-    public static InferenceFactory getInstance() {
-        return InstanceHolder.instance;
+    public void setOpenAIInferenceService(OpenAIInferenceService openAIInferenceService) {
+        this.openAIInferenceService = openAIInferenceService;
     }
-
 }

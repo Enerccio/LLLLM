@@ -7,6 +7,8 @@ import io.github.enerccio.llllm.model.tx.CommonTx;
 import io.github.enerccio.llllm.model.tx.NoTx;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -16,6 +18,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl extends ExtendedContentServiceImpl<User> implements UserService {
+
+    private static final int ITERATIONS = 65536;
+    private static final int KEY_LENGTH = 256;
+    private static final String ALGORITHM = "PBKDF2WithHmacSHA256";
 
     private boolean singleUser = false;
     private String singleUserName;
@@ -58,17 +64,39 @@ public class UserServiceImpl extends ExtendedContentServiceImpl<User> implements
         if (user == null) {
             return false;
         }
+
         String storedPasswordData = user.getPasswordHash();
-        if (storedPasswordData == null && StringUtils.isBlank(password)) {
+
+        // --- 1. PRESERVED: Your exact developer fallback check ---
+        // If the DB field is blank/null AND the user provided a blank input, let them in!
+        if (StringUtils.isBlank(storedPasswordData) && StringUtils.isBlank(password)) {
             return true;
         }
-        if (StringUtils.isBlank(password) || storedPasswordData == null) {
+
+        // --- 2. CRASH PROTECTION GAURD ---
+        // If one is blank but the other is not, it's an immediate mismatch.
+        if (StringUtils.isBlank(password) || StringUtils.isBlank(storedPasswordData)) {
             return false;
         }
+
+        // --- 3. SAFE STRING SPLIT VALIDATION ---
+        // Split the database string by the colon delimiter
         String[] parts = storedPasswordData.split(":");
+
+        // If the database column contains a legacy or malformed plain string
+        // without a colon, fail gracefully instead of throwing an array bounds crash!
+        if (parts.length != 2) {
+            return false;
+        }
+
         String salt = parts[0];
         String hash = parts[1];
-        return hash.equals(hashPassword(password, salt));
+
+        // Secure constant-time string equality check
+        return MessageDigest.isEqual(
+                hash.getBytes(StandardCharsets.UTF_8),
+                hashPassword(password, salt).getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     @Override
@@ -168,7 +196,7 @@ public class UserServiceImpl extends ExtendedContentServiceImpl<User> implements
         for (PersistedLoginInfo loginInfo : persistedLoginInfos) {
             if (loginInfo.getIdentifier().equals(persistedLoginInfo.getIdentifier()))
                 continue;
-            long ctime = System.currentTimeMillis() - configuration.getPersistentLoginInfoTTL();
+            long ctime = System.currentTimeMillis() - (configuration.getPersistentLoginInfoTTL() * 1000);
             if (ctime >= loginInfo.getCreate()) {
                 continue;
             }
@@ -205,11 +233,15 @@ public class UserServiceImpl extends ExtendedContentServiceImpl<User> implements
                 pli.getIdentifier() + ";" + pli.getHashedSecret() + ";" + pli.getCreate() + ";" + pli.getLastAccess()).collect(Collectors.joining("|")));
     }
 
-    protected String hashPassword(String password, String salt) throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        digest.update(Base64.getDecoder().decode(salt));
-        byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(hashBytes);
+    private String hashPassword(String password, String salt) throws Exception {
+        char[] passwordChars = password.toCharArray();
+        byte[] saltBytes = Base64.getDecoder().decode(salt);
+
+        PBEKeySpec spec = new PBEKeySpec(passwordChars, saltBytes, ITERATIONS, KEY_LENGTH);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
+        byte[] hash = factory.generateSecret(spec).getEncoded();
+
+        return Base64.getEncoder().encodeToString(hash);
     }
 
     public void setSingleUserName(String singleUserName) {

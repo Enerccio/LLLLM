@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 })
 public class Language extends ExtendedContentEntity {
 
+    @Enumerated(EnumType.STRING)
     private SupportedLanguage language;
 
     @Lob

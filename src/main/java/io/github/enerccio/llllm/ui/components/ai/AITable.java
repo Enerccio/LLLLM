@@ -12,6 +12,7 @@ import io.github.enerccio.llllm.loc.Localization;
 import io.github.enerccio.llllm.model.domain.AI;
 import io.github.enerccio.llllm.model.domain.collections.AIType;
 import io.github.enerccio.llllm.model.service.AIService;
+import io.github.enerccio.llllm.ui.dialogs.ConfirmDialog;
 import io.github.enerccio.llllm.ui.dialogs.ListSelectDialog;
 import io.github.enerccio.llllm.ui.forms.ai.ai.OpenAICompatibleAIForm;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
@@ -30,7 +31,7 @@ public class AITable {
     private AIService aiService;
 
     private Grid<AITableItem> grid;
-    private AITableProvider aiTableProvider;
+    private AITableProvider tableProvider;
 
     public Component create() throws Exception {
         VerticalLayout layout = new VerticalLayout();
@@ -78,6 +79,27 @@ public class AITable {
             });
             return edit;
         }).setFlexGrow(0).setWidth("50px");
+        grid.addComponentColumn(item -> {
+            Button delete = new Button(VaadinIcon.ERASER.create());
+            delete.addClickListener(event -> {
+                try {
+                    if (item != null) {
+                        AI ai = aiService.findById(item.getId());
+                        ConfirmDialog.show(loc.getValue(L.AI_DELETE_CONFIRM), () -> {
+                            try {
+                                aiService.softDelete(ai);
+                                refresh();
+                            } catch (Exception e) {
+                                UIUtils.internalServerError(loc, e);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    UIUtils.internalServerError(loc, e);
+                }
+            });
+            return delete;
+        }).setFlexGrow(0).setWidth("50px");
 
         layout.add(grid);
         layout.expand(grid);
@@ -99,9 +121,9 @@ public class AITable {
     }
 
     public void refresh() throws Exception {
-        aiTableProvider = new AITableProvider();
-        aiTableProvider.setIds(aiService.findAll());
-        grid.setDataProvider(aiTableProvider);
+        tableProvider = new AITableProvider();
+        tableProvider.setIds(aiService.findAll());
+        grid.setDataProvider(tableProvider);
     }
 
 }

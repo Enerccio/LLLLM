@@ -1,17 +1,11 @@
 package io.github.enerccio.llllm.model.domain.ai;
 
-import io.github.enerccio.llllm.model.domain.ExtendedContentEntity;
+import io.github.enerccio.llllm.model.domain.AI;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(indexes = {
-        @Index(name = "openaicompatible_is_deleted_idx", columnList = "is_deleted"),
-        @Index(name = "openaicompatible_user_id_ix", columnList = "userId")
-})
-public class OpenAICompatible extends ExtendedContentEntity {
+public class OpenAICompatible extends AI {
 
     @Lob
     private String uri;

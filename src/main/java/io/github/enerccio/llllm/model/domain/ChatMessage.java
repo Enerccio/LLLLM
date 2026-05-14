@@ -47,6 +47,9 @@ public class ChatMessage extends ExtendedContentEntity {
 
     private Long tokenCount;
 
+    @Lob
+    private String reasoning;
+
     public Location getLocation() {
         return location;
     }
@@ -149,5 +152,13 @@ public class ChatMessage extends ExtendedContentEntity {
 
     public void setMoveRequest(MoveRequest moveRequest) {
         this.moveRequest = moveRequest;
+    }
+
+    public String getReasoning() {
+        return reasoning;
+    }
+
+    public void setReasoning(String reasoning) {
+        this.reasoning = reasoning;
     }
 }

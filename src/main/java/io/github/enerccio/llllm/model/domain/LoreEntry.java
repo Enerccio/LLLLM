@@ -1,10 +1,7 @@
 package io.github.enerccio.llllm.model.domain;
 
 import io.github.enerccio.llllm.model.domain.collections.ActivationType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(indexes = {
@@ -22,6 +19,7 @@ public class LoreEntry extends ExtendedContentEntity {
     @Lob
     private String shortDescription;
 
+    @Enumerated(EnumType.STRING)
     private ActivationType activationType;
 
     private String keywords;

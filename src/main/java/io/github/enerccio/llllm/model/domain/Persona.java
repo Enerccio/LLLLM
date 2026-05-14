@@ -30,6 +30,7 @@ public class Persona extends ExtendedContentEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Language language;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     public String getName() {

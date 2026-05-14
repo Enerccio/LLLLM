@@ -1,6 +1,9 @@
 package io.github.enerccio.llllm.model.domain;
 
 import io.github.enerccio.llllm.model.domain.collections.Gender;
+import io.github.enerccio.llllm.model.domain.collections.VoiceTone;
+import io.github.enerccio.llllm.model.domain.collections.VoiceType;
+import io.github.enerccio.llllm.synthesis.domain.VoiceProfile;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -21,7 +24,13 @@ public class CharacterInfo extends ExtendedContentEntity {
 
     @Lob
     private String voice;
+    @Enumerated(EnumType.STRING)
+    private VoiceTone voiceTone;
 
+    @Enumerated(EnumType.STRING)
+    private VoiceType voiceType;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -70,11 +79,13 @@ public class CharacterInfo extends ExtendedContentEntity {
         this.voice = voice;
     }
 
-    public Gender getGender() {
-        return gender;
+    public VoiceProfile getVoiceProfile() {
+        return new VoiceProfile(voiceType, voiceTone, gender);
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setVoiceProfile(VoiceProfile voiceProfile) {
+        this.gender = voiceProfile.getGender();
+        this.voiceTone = voiceProfile.getTone();
+        this.voiceType = voiceProfile.getType();
     }
 }

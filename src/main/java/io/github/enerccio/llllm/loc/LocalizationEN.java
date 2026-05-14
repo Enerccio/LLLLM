@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class LocalizationEN extends LocalizationBase {
+
     @Override
     protected void loadMessages() {
         setValue(L.YES, "Yes");
@@ -71,6 +72,17 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.PROTOCOL_BASE_FIELDS_FREQ, "Frequency Penalty");
         setValue(L.PROTOCOL_BASE_FIELDS_PRES, "Presence Penalty");
         setValue(L.PROTOCOL_BASE_FIELDS_ENABLED, "Enabled");
+        setValue(L.AI_DELETE_CONFIRM, "Are you sure you want to delete AI?");
+        setValue(L.PROTOCOL_DELETE_CONFIRM, "Are you sure you want to delete Protocol Preset?");
+        setValue(L.REASONING_NONE, "None");
+        setValue(L.REASONING_LOW, "Low");
+        setValue(L.REASONING_MEDIUM, "Medium");
+        setValue(L.REASONING_HIGH, "High");
+        setValue(L.AI_FORM_REASONING, "Reasoning");
+        setValue(L.AI_FORM_REASONING_LEVEL, "Reasoning Effort");
+        setValue(L.AI_FORM_INPUT_SAMPLER, "Input sampling rate");
+        setValue(L.AI_FORM_INPUT_FORMAT, "Input format");
+        setValue(L.AI_FORM_VOICE_MAP, "Voice Map");
     }
 
     @Override

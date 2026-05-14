@@ -1,10 +1,10 @@
 package io.github.enerccio.llllm.ui.widgets;
 
 import com.vaadin.flow.component.dialog.Dialog;
+import io.github.enerccio.llllm.bound.SessionPoint;
 import io.github.enerccio.llllm.loc.Localization;
 import io.github.enerccio.llllm.model.domain.ExtendedContentEntity;
 import io.github.enerccio.llllm.model.service.ExtendedContentService;
-import io.github.enerccio.llllm.session.SessionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 

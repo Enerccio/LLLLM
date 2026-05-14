@@ -1,8 +1,11 @@
 package io.github.enerccio.llllm.ui.workspace;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -29,6 +32,8 @@ public class Workspace {
     @Autowired
     private Localization loc;
 
+    private final boolean readOnly;
+
     private HTabSheet tabs;
 
     private final ChatComponent chat = new ChatComponent();
@@ -40,6 +45,10 @@ public class Workspace {
     private final SettingsComponent settings = new SettingsComponent();
 
     private final Map<Tab, WorkspaceComponent> tabToComponent = new HashMap<>();
+
+    public Workspace(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
 
     public Component create() throws Exception {
         VerticalLayout vl = new VerticalLayout();
@@ -79,8 +88,32 @@ public class Workspace {
         return vl;
     }
 
-
     public AIComponent getAIComponent() {
         return ai;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    private Component createMultiTabWarningView() {
+        VerticalLayout warningLayout = new VerticalLayout();
+        warningLayout.setSizeFull();
+        warningLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        warningLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        warningLayout.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+
+        H2 header = new H2("Workspace Session Already Open");
+        Paragraph description = new Paragraph(
+                "You are already accessing your language RPG workspace inside another browser tab. " +
+                        "To protect your active chat sessions and database records from data corruption, " +
+                        "this window has been switched to read-only mode."
+        );
+        description.getStyle().set("text-align", "center");
+        description.getStyle().set("max-width", "500px");
+        description.getStyle().set("color", "var(--lumo-secondary-text-color)");
+
+        warningLayout.add(header, description);
+        return warningLayout;
     }
 }
