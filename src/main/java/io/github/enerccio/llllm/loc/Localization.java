@@ -2,6 +2,7 @@ package io.github.enerccio.llllm.loc;
 
 
 import io.github.enerccio.llllm.model.domain.collections.AIType;
+import io.github.enerccio.llllm.model.domain.collections.ProtocolType;
 
 import java.text.DateFormat;
 import java.util.Comparator;
@@ -20,4 +21,5 @@ public interface Localization {
     Comparator<String> createLocaleComparator();
 
     L getAIType(AIType aiType);
+    L getProtocolType(ProtocolType t);
 }

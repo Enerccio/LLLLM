@@ -6,9 +6,4 @@ import jakarta.persistence.Entity;
 @Entity
 public class ChatCompletion extends Protocol {
 
-    @Override
-    public String getTypeName() {
-        return "chat-completion";
-    }
-
 }

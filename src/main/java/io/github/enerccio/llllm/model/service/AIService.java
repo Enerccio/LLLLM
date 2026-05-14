@@ -6,6 +6,5 @@ import io.github.enerccio.llllm.model.domain.collections.AIType;
 public interface AIService extends ExtendedContentService<AI> {
 
     AI create(AIType aiType) throws Exception;
-    InferenceProvider getInferenceProvider(AI ai);
 
 }

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 @Push
 @PWA(name = "LLLLM", shortName = "llllm")
-@Theme(themeClass = Lumo.class, variant = Lumo.LIGHT)
+@Theme(themeClass = Lumo.class, variant = Lumo.DARK)
 @BodySize(height = "100vh", width = "100vw")
 @JsModule("./styles/shared-styles.js")
 @JsModule("@vaadin/vaadin-lumo-styles/presets/compact.js")

@@ -22,6 +22,7 @@ import io.github.enerccio.llllm.loc.L;
 import io.github.enerccio.llllm.model.domain.AI;
 import io.github.enerccio.llllm.model.domain.ai.OpenAICompatible;
 import io.github.enerccio.llllm.model.domain.collections.AIType;
+import io.github.enerccio.llllm.model.factories.InferenceFactory;
 import io.github.enerccio.llllm.model.service.AIService;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
 import io.github.enerccio.llllm.ui.widgets.FormBase;
@@ -193,7 +194,7 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
             openAICompatible.setApiKey(apiKey);
             temporaryCopy.setAiType(AIType.OPEN_AI_COMPATIBLE);
 
-            List<Model> models = service.getInferenceProvider(temporaryCopy).getModels(temporaryCopy);
+            List<Model> models = InferenceFactory.getInstance().getInferenceProvider(temporaryCopy).getModels(temporaryCopy);
             model.setItems(models);
         } catch (Exception e) {
             UIUtils.internalServerError(loc, e);

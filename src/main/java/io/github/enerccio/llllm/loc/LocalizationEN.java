@@ -7,8 +7,9 @@ import java.util.Locale;
 public class LocalizationEN extends LocalizationBase {
     @Override
     protected void loadMessages() {
+        setValue(L.YES, "Yes");
+        setValue(L.NO, "No");
         setValue(L.BUTTON_EXIT, "Exit");
-
         setValue(L.LABEL_USERNAME, "Uživatelské jméno");
         setValue(L.LABEL_USER_FULLNAME, "Jméno a příjmení");
         setValue(L.LABEL_EMAIL, "Email");
@@ -55,6 +56,21 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.OPEN_AI_COMPATIBLE_FORM_NEEDS_JAILBREAK, "Needs Jailbreak");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_JAILBREAK, "Jailbreak Prompt");
         setValue(L.WORKSPACE_TABS_SETTINGS, "Settings");
+        setValue(L.CHAT_COMPLETION_FORM_MODEL_HEADER, "Chat Completion Preset");
+        setValue(L.CHAT_COMPLETION_FORM_TAB_MAIN, "Main");
+        setValue(L.CHAT_COMPLETION_FORM_TAB_ADVANCED, "Advanced Settings");
+        setValue(L.PROTOCOL_SELECT_AI_PROVIDER, "Select Communication Protocol");
+        setValue(L.PROTOCOL_SELECT_AI_PROVIDER_LABEL, "Protocol");
+        setValue(L.PROTOCOL_TYPE_OPEN_CHAT_COMPLETION, "Chat Completion");
+        setValue(L.PROTOCOL_TYPE_OPEN_CHAT_COMPLETION, "Chat Completion");
+        setValue(L.PROTOCOL_BASE_FIELDS_NAME, "Name of the preset");
+        setValue(L.PROTOCOL_BASE_FIELDS_MAX_TOKENS, "Max Reply Tokens");
+        setValue(L.PROTOCOL_BASE_FIELDS_MAX_CONTEXT, "Max Context Size");
+        setValue(L.PROTOCOL_BASE_FIELDS_TEMPERATURE, "Temperature");
+        setValue(L.PROTOCOL_BASE_FIELDS_TOP_P, "Top P");
+        setValue(L.PROTOCOL_BASE_FIELDS_FREQ, "Frequency Penalty");
+        setValue(L.PROTOCOL_BASE_FIELDS_PRES, "Presence Penalty");
+        setValue(L.PROTOCOL_BASE_FIELDS_ENABLED, "Enabled");
     }
 
     @Override

@@ -15,6 +15,9 @@ public class Chat extends ExtendedContentEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    private Persona persona;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Chat previousChat;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -152,5 +155,13 @@ public class Chat extends ExtendedContentEntity {
 
     public void setChatSummary(String chatSummary) {
         this.chatSummary = chatSummary;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 }

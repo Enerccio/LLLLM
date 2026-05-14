@@ -10,7 +10,7 @@ public class ProtocolProvider extends BackendTableProviderBase<ProtocolTableItem
     protected ProtocolTableItem entityToTableItem(Protocol entity) throws Exception {
         ProtocolTableItem item = new ProtocolTableItem(entity.getId());
         item.setName(entity.getName());
-        item.setType(entity.getTypeName());
+        item.setType(loc.getValue(loc.getProtocolType(entity.getProtocolType())));
         return item;
     }
 }

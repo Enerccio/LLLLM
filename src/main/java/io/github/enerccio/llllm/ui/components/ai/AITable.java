@@ -29,7 +29,7 @@ public class AITable {
     @Autowired
     private AIService aiService;
 
-    private Grid<AITableItem> aiGrid;
+    private Grid<AITableItem> grid;
     private AITableProvider aiTableProvider;
 
     public Component create() throws Exception {
@@ -58,13 +58,13 @@ public class AITable {
         });
         buttons.add(newAI);
 
-        aiGrid = new Grid<>();
-        aiGrid.setSizeFull();
-        aiGrid.setSelectionMode(SelectionMode.SINGLE);
+        grid = new Grid<>();
+        grid.setSizeFull();
+        grid.setSelectionMode(SelectionMode.SINGLE);
 
-        aiGrid.addColumn(AITableItem::getName).setHeader(loc.getValue(L.AITABLE_COLUMN_NAME));
-        aiGrid.addColumn(AITableItem::getType).setHeader(loc.getValue(L.AITABLE_COLUMN_TYPE));
-        aiGrid.addComponentColumn(item -> {
+        grid.addColumn(AITableItem::getName).setHeader(loc.getValue(L.AITABLE_COLUMN_NAME));
+        grid.addColumn(AITableItem::getType).setHeader(loc.getValue(L.AITABLE_COLUMN_TYPE));
+        grid.addComponentColumn(item -> {
             Button edit = new Button(VaadinIcon.PENCIL.create());
             edit.addClickListener(event -> {
                 try {
@@ -79,8 +79,8 @@ public class AITable {
             return edit;
         }).setFlexGrow(0).setWidth("50px");
 
-        layout.add(aiGrid);
-        layout.expand(aiGrid);
+        layout.add(grid);
+        layout.expand(grid);
 
         return layout;
     }
@@ -101,7 +101,7 @@ public class AITable {
     public void refresh() throws Exception {
         aiTableProvider = new AITableProvider();
         aiTableProvider.setIds(aiService.findAll());
-        aiGrid.setDataProvider(aiTableProvider);
+        grid.setDataProvider(aiTableProvider);
     }
 
 }
