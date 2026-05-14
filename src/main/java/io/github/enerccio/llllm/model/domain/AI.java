@@ -26,6 +26,11 @@ public class AI extends ExtendedContentEntity {
     @Lob
     private String capabilities;
 
+    @Lob
+    private String jailbreak;
+
+    private Boolean needsJailbreak;
+
     public OpenAICompatible getOpenAICompatible() {
         return openAICompatible;
     }
@@ -64,5 +69,21 @@ public class AI extends ExtendedContentEntity {
 
     public void setCapabilities(String capabilities) {
         this.capabilities = capabilities;
+    }
+
+    public String getJailbreak() {
+        return jailbreak;
+    }
+
+    public void setJailbreak(String jailbreak) {
+        this.jailbreak = jailbreak;
+    }
+
+    public Boolean getNeedsJailbreak() {
+        return needsJailbreak == null ? Boolean.FALSE : needsJailbreak;
+    }
+
+    public void setNeedsJailbreak(Boolean needsJailbreak) {
+        this.needsJailbreak = needsJailbreak;
     }
 }

@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.openai.models.models.Model;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -24,6 +26,7 @@ import io.github.enerccio.llllm.model.service.AIService;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
 import io.github.enerccio.llllm.ui.widgets.FormBase;
 import org.apache.commons.lang3.StringUtils;
+import org.vaadin.firitin.layouts.VTabSheet;
 
 import java.util.List;
 
@@ -35,15 +38,53 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
     private PasswordField apiKey;
     private ComboBox<Model> model;
     private TextArea additionalParams;
-    private boolean inRefresh = false;
+
+    private Checkbox needsJailbreak;
+    private TextArea jailbreak;
+
     private Button save;
+
+    private boolean inRefresh = false;
 
     @Override
     protected void createContents() throws Exception {
         setHeaderTitle(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_MODEL_HEADER));
-        setHeight("490px");
+        setHeight("540px");
         setWidth("700px");
 
+        VTabSheet sheet = new VTabSheet();
+        sheet.setSizeFull();
+        add(sheet);
+
+        sheet.add(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_TAB_MAIN), createMainTab());
+        sheet.add(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_TAB_ADVANCED), createAdvancedTab());
+
+        Button exit = new Button(loc.getValue(L.BUTTON_EXIT));
+        exit.addClickListener(event -> {
+            close();
+            try {
+                sessionPoint.getWorkspace().getAIComponent().refresh();
+            } catch (Exception e) {
+                UIUtils.internalServerError(loc, e);
+            }
+        });
+
+        save = new Button(loc.getValue(L.BUTTON_SAVE));
+        save.addClickListener(event -> {
+            try {
+                save();
+                close();
+                sessionPoint.getWorkspace().getAIComponent().refresh();
+            } catch (Exception e) {
+                UIUtils.internalServerError(loc, e);
+            }
+        });
+
+        HorizontalLayout buttons = new HorizontalLayout(exit, save);
+        getFooter().add(buttons);
+    }
+
+    private Component createMainTab() {
         VerticalLayout main = new VerticalLayout();
         main.setMargin(false);
         main.setPadding(false);
@@ -86,31 +127,24 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
         layout.setWidth("100%");
         main.add(layout);
         main.add(additionalParams);
+        return main;
+    }
 
-        Button exit = new Button(loc.getValue(L.BUTTON_EXIT));
-        exit.addClickListener(event -> {
-            close();
-            try {
-                sessionPoint.getWorkspace().getAIComponent().refresh();
-            } catch (Exception e) {
-                UIUtils.internalServerError(loc, e);
-            }
-        });
+    private Component createAdvancedTab() {
+        VerticalLayout main = new VerticalLayout();
+        main.setMargin(false);
+        main.setPadding(false);
+        main.setSizeFull();
 
-        save = new Button(loc.getValue(L.BUTTON_SAVE));
-        save.addClickListener(event -> {
-            try {
-                save();
-                close();
-                sessionPoint.getWorkspace().getAIComponent().refresh();
-            } catch (Exception e) {
-                UIUtils.internalServerError(loc, e);
-            }
-        });
+        needsJailbreak = new Checkbox(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_NEEDS_JAILBREAK));
+        needsJailbreak.setWidth("100%");
+        jailbreak = new TextArea(loc.getValue(L.OPEN_AI_COMPATIBLE_FORM_JAILBREAK));
+        jailbreak.setMinRows(6);
+        jailbreak.setWidth("100%");
 
-        HorizontalLayout buttons = new HorizontalLayout(exit, save);
-        getFooter().add(buttons);
-        add(main);
+        main.add(needsJailbreak);
+        main.add(jailbreak);
+        return main;
     }
 
     private void validateAdditionalParams() {
@@ -176,6 +210,8 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
             uri.setValue(openAICompatible.getUri() == null ? "" : openAICompatible.getUri());
             additionalParams.setValue(getModel().getOpenAICompatible().getAdditionalParameters() == null ? "" : getModel().getOpenAICompatible().getAdditionalParameters());
             duration.setValue(getModel().getMaxDuration());
+            needsJailbreak.setValue(getModel().getNeedsJailbreak());
+            jailbreak.setValue(getModel().getJailbreak() == null ? "" : getModel().getJailbreak());
             inRefresh = false;
             reloadModelList();
         } catch (Exception e) {
@@ -196,6 +232,8 @@ public class OpenAICompatibleAIForm extends FormBase<AI, AIService> {
         this.entity.setCapabilities(this.model.getValue() == null ? null : new GsonBuilder().create().toJson(model.getValue()._additionalProperties()));
         this.entity.getOpenAICompatible().setAdditionalParameters(additionalParams.getValue());
         this.entity.setMaxDuration(duration.getValue());
+        this.entity.setJailbreak(jailbreak.getValue());
+        this.entity.setNeedsJailbreak(needsJailbreak.getValue());
 
         this.service.save(this.entity);
     }

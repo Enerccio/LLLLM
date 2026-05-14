@@ -3,6 +3,7 @@ package io.github.enerccio.llllm.ui.components.ai;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -59,9 +60,24 @@ public class AITable {
 
         aiGrid = new Grid<>();
         aiGrid.setSizeFull();
+        aiGrid.setSelectionMode(SelectionMode.SINGLE);
 
         aiGrid.addColumn(AITableItem::getName).setHeader(loc.getValue(L.AITABLE_COLUMN_NAME));
         aiGrid.addColumn(AITableItem::getType).setHeader(loc.getValue(L.AITABLE_COLUMN_TYPE));
+        aiGrid.addComponentColumn(item -> {
+            Button edit = new Button(VaadinIcon.PENCIL.create());
+            edit.addClickListener(event -> {
+                try {
+                    if (item != null) {
+                        AI ai = aiService.findById(item.getId());
+                        openAiDialog(ai);
+                    }
+                } catch (Exception e) {
+                    UIUtils.internalServerError(loc, e);
+                }
+            });
+            return edit;
+        }).setFlexGrow(0).setWidth("50px");
 
         layout.add(aiGrid);
         layout.expand(aiGrid);

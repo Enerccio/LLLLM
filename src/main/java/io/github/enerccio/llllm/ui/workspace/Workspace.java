@@ -14,6 +14,7 @@ import io.github.enerccio.llllm.ui.components.chat.ChatComponent;
 import io.github.enerccio.llllm.ui.components.location.LocationComponent;
 import io.github.enerccio.llllm.ui.components.lorebook.LorebookComponent;
 import io.github.enerccio.llllm.ui.components.persona.PersonaComponent;
+import io.github.enerccio.llllm.ui.components.settings.SettingsComponent;
 import io.github.enerccio.llllm.ui.utils.UIUtils;
 import io.github.enerccio.llllm.ui.widgets.HTabSheet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class Workspace {
     private final LorebookComponent lorebook = new LorebookComponent();
     private final LocationComponent location = new LocationComponent();
     private final AIComponent ai = new AIComponent();
+    private final SettingsComponent settings = new SettingsComponent();
 
     private final Map<Tab, WorkspaceComponent> tabToComponent = new HashMap<>();
 
@@ -53,6 +55,7 @@ public class Workspace {
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.PICTURE.create(), new Span(loc.getValue(L.WORKSPACE_TABS_LOCATIONS))), location.create()), location);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.BOOK.create(), new Span(loc.getValue(L.WORKSPACE_TABS_LOREBOOK))), lorebook.create()), lorebook);
         tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.AUTOMATION.create(), new Span(loc.getValue(L.WORKSPACE_TABS_AI))), ai.create()), ai);
+        tabToComponent.put(tabs.add(new HorizontalLayout(VaadinIcon.COGS.create(), new Span(loc.getValue(L.WORKSPACE_TABS_SETTINGS))), settings.create()), settings);
 
         tabs.addSelectedChangeListener(e -> {
             if (e.getPreviousTab() != null) {

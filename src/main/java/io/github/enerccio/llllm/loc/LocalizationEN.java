@@ -50,6 +50,11 @@ public class LocalizationEN extends LocalizationBase {
         setValue(L.AITABLE_SELECT_AI_PROVIDER_LABEL, "AI Provider");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_ADDITIONAL_PARAMS, "Additional parameters (JSON):");
         setValue(L.OPEN_AI_COMPATIBLE_FORM_ADDITIONAL_PARAMS_UNPARSEABLE, "Unable to parse additional parameters as valid JSON");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_TAB_MAIN, "Main");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_TAB_ADVANCED, "Advanced Settings");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_NEEDS_JAILBREAK, "Needs Jailbreak");
+        setValue(L.OPEN_AI_COMPATIBLE_FORM_JAILBREAK, "Jailbreak Prompt");
+        setValue(L.WORKSPACE_TABS_SETTINGS, "Settings");
     }
 
     @Override
